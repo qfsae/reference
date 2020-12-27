@@ -1,0 +1,45 @@
+{
+    "configurations": [
+        {
+            "name": "!!! WARNING !!! AUTO-GENERATED FILE, PLEASE DO NOT MODIFY IT AND USE https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags"
+        },
+        {
+            "name": "Linux",
+            "includePath": [
+                "/home/etha/Desktop/qfsae/reference/PlatformIO/pmboard/cmsis/include",
+                "/home/etha/Desktop/qfsae/reference/PlatformIO/pmboard/cmsis/src",
+                "/home/etha/.platformio/packages/framework-cmsis/CMSIS/Core/Include",
+                "/home/etha/.platformio/packages/framework-cmsis-stm32f4/Include",
+                "/home/etha/.platformio/packages/tool-unity",
+                ""
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true,
+                "path": [
+                    "/home/etha/Desktop/qfsae/reference/PlatformIO/pmboard/cmsis/include",
+                    "/home/etha/Desktop/qfsae/reference/PlatformIO/pmboard/cmsis/src",
+                    "/home/etha/.platformio/packages/framework-cmsis/CMSIS/Core/Include",
+                    "/home/etha/.platformio/packages/framework-cmsis-stm32f4/Include",
+                    "/home/etha/.platformio/packages/tool-unity",
+                    ""
+                ]
+            },
+            "defines": [
+                "PLATFORMIO=50003",
+                "STM32F446xx",
+                "STM32F4xx",
+                "F_CPU=180000000L",
+                "GENERIC_F446RX",
+                ""
+            ],
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/home/etha/.platformio/packages/toolchain-gccarmnoneeabi@1.70201.0/bin/arm-none-eabi-gcc",
+            "compilerArgs": [
+                "-mthumb",
+                "-mcpu=cortex-m4",
+                ""
+            ]
+        }
+    ],
+    "version": 4
+}
