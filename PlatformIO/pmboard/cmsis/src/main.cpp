@@ -11,7 +11,35 @@ void delay() {
     for (volatile long long i = 0; i < 500000; i++);
 }
 
+// fetch the USART 2 prescaler
+// this is dynamic so that if the STM32F446 is configured at a different system clock we can still infer the UART peripheral clock
+uint8_t getPeriphPrescaler() {
+	// reference manual pg 132
+	uint32_t val = RCC->CFGR & ((1 << 10) | (1 << 11) | (1 << 12));
+	val >>= 10;
+	if (val == 0b100) {
+		return 2;
+	} else if (val == 0b101) {
+		return 4;
+	} else if (val == 0b110) {
+		return 8;
+	} else if (val == 0b111) {
+		return 16;
+	}
+	return 1;
+}
 
+// for over sampling
+uint32_t makeBRRValue(uint32_t baud) {
+	uint32_t periphClock = SystemCoreClock / getPeriphPrescaler(); // APB1 bus prescaler is 4
+	// follow formula given in the reference manual and examples on pg 809
+	// formula was re arranged for usart div value
+	double usartDiv = (double) periphClock / (8 * baud);
+	uint32_t mantissa = (uint32_t) usartDiv;
+	uint32_t fraction = round(8 * (usartDiv - mantissa));
+	// as per BRR register layout fraction is placed in lowest nibble and the mantissa is the upper bits
+	return (mantissa << 4) | fraction;
+}
 
 // Configure USART2 which is connected to the blackmagic probe on the PMBoard
 void USART2_INIT() {
@@ -34,7 +62,14 @@ void USART2_INIT() {
 	// PA3 also needs to be in alternate function mode. set bit 7
 	GPIOA->MODER |= GPIO_MODER_MODER3_1; // same as 1 << 7
 
-	USART2->BRR = SystemCoreClock / 56000;
+	// The following values are for without over sample
+	// USART2->BRR = 0x019A; // working
+	// USART2->BRR = 0x197; // working
+	// uint32_t baud = 115200;
+	// USART2->BRR = ((SystemCoreClock / 4) + baud / 2) / baud;
+	// brVAL = ((SystemCoreClock / 4) + baud / 2) / baud;
+	// USART2->BRR = 0x0307; // working for oversample
+	USART2->BRR = makeBRRValue(115200);
 
 	// SET USART enable, transmit enable, receive enable in control register 1
 	USART2->CR1 |= USART_CR1_TE; // only enable transmit for now
